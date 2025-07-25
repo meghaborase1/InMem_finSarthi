@@ -1,18 +1,17 @@
 
 import Link from "next/link";
+import logo3 from './../app/Assets/logo3.png';
 
 export function Logo() {
     return (
         <Link href="/coach" className="flex items-center gap-2 font-headline font-bold text-lg">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="h-7 w-7 text-primary"
-            >
-                <path d="M11.9,3.4C5.3,3.4,0,8.3,0,14.5c0,2.5,0.9,4.9,2.5,6.7C2.7,21,3,21,3.2,20.9c0.3-0.2,0.3-0.5,0.2-0.8 c-1.2-2-1.9-4.2-1.9-6.6c0-5.4,4.6-9.9,10.4-9.9h3.5v3.4h-3.5c-3.5,0-6.4,2.7-6.4,6s2.9,6,6.4,6h2.3v3.4h-2.3 C7.1,22.9,2.9,19.1,2.9,14.5c0-0.1,0-0.1,0-0.2H18v-3H9.4c-0.6-2.4-2.8-4.1-5.4-4.1c-0.1,0-0.2,0-0.2,0V3.4H11.9z"/>
-                <path d="M19.4,7.8c-2.9,0-5.3,2.2-5.3,4.9c0,2.7,2.4,4.9,5.3,4.9c0.6,0,1.2-0.1,1.8-0.3l1.8,1.2c0.2,0.1,0.5,0.1,0.6-0.1 c0.1-0.2,0.1-0.5-0.1-0.6l-1.6-1.1c1.3-1,2.1-2.5,2.1-4.1C24,9.6,21.9,7.8,19.4,7.8z M19.8,13.4c-0.1,0-0.2,0-0.3-0.1 c-0.1-0.1-0.2-0.2-0.2-0.3c0-0.1,0-0.2,0.1-0.3c0.1-0.1,0.2-0.2,0.3-0.2c0.1,0,0.3,0,0.4,0.1c0.1,0.1,0.1,0.2,0.1,0.3 c0,0.1,0,0.3-0.1,0.4C20.1,13.4,19.9,13.4,19.8,13.4z M21.4,11.8c-0.1,0-0.2,0-0.3-0.1c-0.1-0.1-0.2-0.2-0.2-0.3 c0-0.1,0-0.2,0.1-0.3c0.1-0.1,0.2-0.2,0.3-0.2c0.1,0,0.3,0,0.4,0.1c0.1,0.1,0.1,0.2,0.1,0.3c0,0.1,0,0.3-0.1,0.4 C21.7,11.8,21.5,11.8,21.4,11.8z" />
-            </svg>
+            <Image
+          src={logo3}// Path to your PNG file in the public directory
+          alt="FINmate Logo" // Essential for accessibility
+          width={48} // Set the width of your PNG image (in px)
+          height={48} // Set the height of your PNG image (in px)
+          className="text-primary" // Apply any necessary Tailwind classes for styling (e.g., for spacing if needed)
+        />
             <span className="text-primary">FINmate</span>
         </Link>
     )
