@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 #RUN chmod -R 777 /app/
 RUN npm install --force
+RUN npm install react-markdown
 
 # Stage 2: Builder
 FROM node:18-alpine AS builder
