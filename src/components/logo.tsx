@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import logo3 from './../app/Assets/logo3.png';
+import Image from "next/image";
 
 export function Logo() {
     return (
