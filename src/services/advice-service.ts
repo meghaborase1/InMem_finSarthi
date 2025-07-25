@@ -16,34 +16,46 @@ export type AdviceSession = Omit<RawAdviceSession, 'formData'> & {
  * Creates a new advice session.
  * If isLoggedIn is false, it creates an anonymous session (userId is null).
  * If isLoggedIn is true, it associates it with the user.
+ * It can either generate new advice by calling an AI flow or save pre-generated content.
  * @param data The data for the new advice session.
+ * @param user The current user object.
+ * @param language The language for the session.
  * @param isLoggedIn A flag to indicate if we should link to the most recent user.
  * @returns The newly created advice session.
  */
 export async function createAdviceSessionForCurrentUser(
-  data: Omit<GeneratePersonalizedAdviceInput, 'language' | 'age' | 'gender' | 'city' | 'country'>,
+  data: Omit<GeneratePersonalizedAdviceInput, 'language' | 'age' | 'gender' | 'city' | 'country'> & { generatedAdvice?: string },
   user: User | null,
   language: GeneratePersonalizedAdviceInput['language'],
   isLoggedIn: boolean
 ): Promise<AdviceSession> {
   
-  const adviceInput: GeneratePersonalizedAdviceInput = {
-    ...data,
-    language,
-    age: user?.age ?? undefined,
-    gender: user?.gender ?? undefined,
-    city: user?.city ?? undefined,
-    country: user?.country ?? undefined,
-  };
-  
-  const adviceResult = await generatePersonalizedAdvice(adviceInput);
+  let adviceText: string;
+
+  // If advice is already provided (e.g., saving a chat transcript), use it.
+  // Otherwise, generate new advice by calling the AI flow.
+  if (data.generatedAdvice) {
+    adviceText = data.generatedAdvice;
+  } else {
+    const adviceInput: GeneratePersonalizedAdviceInput = {
+      ...data,
+      language,
+      age: user?.age ?? undefined,
+      gender: user?.gender ?? undefined,
+      city: user?.city ?? undefined,
+      country: user?.country ?? undefined,
+    };
+    const adviceResult = await generatePersonalizedAdvice(adviceInput);
+    adviceText = adviceResult.advice;
+  }
+
 
   const newSession: AdviceSession = {
     id: createId(),
     promptKey: data.promptKey,
     formData: data.formData,
     language,
-    generatedAdvice: adviceResult.advice,
+    generatedAdvice: adviceText,
     userId: isLoggedIn ? user?.id ?? null : null,
     createdAt: new Date(),
   };
