@@ -1,40 +1,34 @@
-# Dockerfile
-
-# Stage 1: Install dependencies
-FROM node:20-alpine AS deps
+@@ -1,32 +1,32 @@
+# Stage 1: Dependencies
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package.json ./
+COPY package.json package-lock.json ./
+RUN chmod -R 777 /app/
 RUN npm install --frozen-lockfile
 
-# Stage 2: Build the application
-FROM node:20-alpine AS builder
+# Stage 2: Builder
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Environment variables for the build
-# Add any build-time environment variables here if needed
-# ENV NEXT_PUBLIC_SOME_ENV_VAR=your_value
-
+ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
-# Stage 3: Production image
-FROM node:20-alpine AS runner
+RUN chmod -R 777 /app/src/lib/
+# Stage 3: Runner
+FROM node:18-alpine AS runner
 WORKDIR /app
+ENV NODE_ENV production
+# Add a non-root user for security
+RUN addgroup --system --gid 1001 nextjs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+#COPY --from=builder /app/public ./public
 
-ENV NODE_ENV=production
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Expose the port that Next.js will run on.
-# Cloud Run automatically provides the PORT environment variable.
 EXPOSE 3000
-ENV PORT 3000
 
-# The CMD instruction starts the application.
-# `npm start` is a common convention that calls `next start`.
 CMD ["npm", "start"]
