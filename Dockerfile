@@ -4,7 +4,7 @@ FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN chmod -R 777 /app/
+#RUN chmod -R 777 /app/
 RUN npm install --frozen-lockfile
 
 # Stage 2: Builder
