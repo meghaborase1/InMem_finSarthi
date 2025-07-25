@@ -3,7 +3,6 @@ FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN chmod -R 777 /app/
 RUN npm install --frozen-lockfile
 
 # Stage 2: Builder
@@ -14,6 +13,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
 
+RUN chmod -R 777 /app/src/lib/
 # Stage 3: Runner
 FROM node:18-alpine AS runner
 WORKDIR /app
