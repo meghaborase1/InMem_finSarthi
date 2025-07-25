@@ -45,6 +45,8 @@ import { createId } from "@paralleldrive/cuid2";
 import { useAppTranslations } from "@/providers/translations-provider";
 import { useToast } from "@/hooks/use-toast";
 import advicePrompts from "@/lib/advice-prompts.json";
++import  ReactMarkdown  from 'react-markdown';
++import remarkGfm from 'remark-gfm';
 
 type MessageRole = "user" | "assistant";
 
@@ -368,7 +370,10 @@ export function FinancialCoach({ currentUser, chatSession, chatPartner }: Financ
                             "bg-muted rounded-bl-none"
                           )}
                         >
-                          <p className="whitespace-pre-wrap">{message.content}</p>
+                          {/*<p className="whitespace-pre-wrap">{message.content}</p>*/}
+                          + <ReactMarkdown remarkPlugins={[remarkGfm]}>
++                            {message.content}
++                          </ReactMarkdown>
                         </div>
                          {!isHumanChat && (
                             <Button
